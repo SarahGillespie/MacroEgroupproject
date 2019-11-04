@@ -33,6 +33,7 @@ library(RColorBrewer)
 library(ggthemes)
 library(janitor)
 library(reticulate)
+library(scales)
 
 ```
 
@@ -59,21 +60,32 @@ currency <- currency %>%
 p <- ggplot(data=currency, aes(x=observation_date, y=UK)) +
   geom_line(color = "#31a354") +
   geom_line(data = currency, aes(x = observation_date, y = Euro, color = Euro), color = "#3182bd") +
-  labs(title = "Exchange rates during Brexit", subtitle = "U.S. Dollar to one British Pound and one Euro", y= "USD to British Pound and Euro", x = "Date", caption = "Source: St. Louis Federal Reserve. Graph: Sarah Gillespie") +
+  labs(title = "Exchange rates during Brexit", subtitle = "How many U.S. dollars £1 or €1 buys", y= " ", x = "Date", caption = "Source: St. Louis Federal Reserve. Graph: Sarah Gillespie") +
   expand_limits(y = 0) +
   expand_limits(y = 2) + #makes the graph start at 0
+  scale_y_continuous(labels = dollar) +
   theme_economist()
 
 p
 
-euro_ylim <- c(NA, 1.25)
+notes_ylim <- c(1.6, NA)
 
-p + geom_label_repel(aes(label = notes),
-                  #ylim = y_limits,
+ext_ylim <- c(NA, 1.7)
+
+leader_ylim <- c(NA,0.85)
+
+parli_ylim <- c(NA,0.5)
+
+p + geom_label_repel(aes(label = leader), #LEADER
+                  ylim = leader_ylim,
                   box.padding = 1,
                   force_pull = -1) +
-  geom_label_repel(aes(label = notes2),
-                  ylim = euro_ylim,
+    geom_label_repel(aes(label = parli),#parliment
+                  ylim = parli_ylim,
+                  box.padding = 1,
+                  force_pull = -1) +
+    geom_label_repel(aes(label = notes),#parliment
+                  ylim = notes_ylim,
                   box.padding = 1,
                   force_pull = -1)
 
