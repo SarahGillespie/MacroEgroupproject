@@ -1,0 +1,81 @@
+---
+title: "ExchangeRates"
+author: "Sarah Gillespie"
+date: "11/3/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Accessed on `r format(Sys.Date(), "%B %e, %Y")`
+
+<center>
+
+## Exchaneg Rates
+
+</center>
+
+```{r StartingItems, message=FALSE, warning = FALSE}
+
+library(tidyverse)
+library(dplyr)
+library(plyr)
+library(Stack)
+library(ggplot2)
+library(ggrepel)
+library(sf)
+library(leaflet)
+library(lwgeom)
+library(reshape2)
+library(RColorBrewer)
+library(ggthemes)
+library(janitor)
+library(reticulate)
+
+```
+
+
+```{r getData, message=FALSE, warning = FALSE}
+
+currency <- read_csv("currency.csv")
+
+# Source:  U.S. / U.K. Foreign Exchange Rate from St. Louis Fed https://fred.stlouisfed.org/series/DEXUSUK
+# From: 2014-10-25 - 2019-10-25
+
+# Source: U.S. / Euro Foreign Exchange Rate from St. Louis https://fred.stlouisfed.org/series/DEXUSEU
+# From: 2014-10-25 - 2019-10-25
+
+currency <- currency %>%
+  mutate(UKtoUSD = 1/UK) %>%
+  mutate(EurotoUSD = 1/Euro)
+
+```
+
+
+```{r graph, message=FALSE, warning = FALSE}
+
+p <- ggplot(data=currency, aes(x=observation_date, y=UK)) +
+  geom_line(color = "#31a354") +
+  geom_line(data = currency, aes(x = observation_date, y = Euro, color = Euro), color = "#3182bd") +
+  labs(title = "Exchange rates during Brexit", subtitle = "U.S. Dollar to one British Pound and one Euro", y= "USD to British Pound and Euro", x = "Date", caption = "Source: St. Louis Federal Reserve. Graph: Sarah Gillespie") +
+  expand_limits(y = 0) +
+  expand_limits(y = 2) + #makes the graph start at 0
+  theme_economist()
+
+p
+
+euro_ylim <- c(NA, 1.25)
+
+p + geom_label_repel(aes(label = notes),
+                  #ylim = y_limits,
+                  box.padding = 1,
+                  force_pull = -1) +
+  geom_label_repel(aes(label = notes2),
+                  ylim = euro_ylim,
+                  box.padding = 1,
+                  force_pull = -1)
+
+
+```
