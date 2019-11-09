@@ -2,7 +2,9 @@
 title: "ExchangeRates"
 author: "Sarah Gillespie"
 date: "11/3/2019"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -129,7 +131,7 @@ r <- ggplot(data=GDPgraphSMALL, aes(x=variable, y=value, group = Country, color=
     geom_point() +
   scale_y_continuous(labels = dollar) +
     labs(title = "Gross Domestic Product", subtitle = "(in trillions of 2018 dollars)", y= " ", x = "Year", color = " ", caption = "Sources: World Bank, Bureau of Economic Analysis. Created by: Sarah Gillespie") +
-  theme_bw()
+  theme_economist()
 
 r
 
