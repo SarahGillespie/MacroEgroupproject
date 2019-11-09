@@ -48,19 +48,21 @@ currency <- read_csv("currency.csv")
 # Source: U.S. / Euro Foreign Exchange Rate from St. Louis https://fred.stlouisfed.org/series/DEXUSEU
 # From: 2014-10-25 - 2019-10-25
 
-currency <- currency %>%
-  mutate(UKtoUSD = 1/UK) %>%
-  mutate(EurotoUSD = 1/Euro)
+GDP <- read_csv("GDP.csv")
+
+GDP2 <- read_csv("GDP2.csv")
+
+#GDP by state source: https://www.bea.gov/data/gdp/gdp-state then follow through the prompts for the state and year you want.
+# GDP for countries source: https://data.worldbank.org/indicator/NY.GDP.MKTP.CD
 
 ```
 
 
-```{r graph, message=FALSE, warning = FALSE}
-
+```{r ExhangeRatesgraph, message=FALSE, warning = FALSE}
 p <- ggplot(data=currency, aes(x=observation_date, y=UK)) +
   geom_line(color = "#31a354") +
   geom_line(data = currency, aes(x = observation_date, y = Euro, color = Euro), color = "#3182bd") +
-  labs(title = "Exchange rates during Brexit", subtitle = "How many U.S. dollars £1 or €1 buys", y= " ", x = "Date", caption = "Source: St. Louis Federal Reserve. Graph: Sarah Gillespie") +
+  labs(title = "Exchange rates during Brexit", subtitle = "How many U.S. dollars £1 or €1 buys", y= " ", x = "Date", caption = "Source: St. Louis Federal Reserve. Created by: Sarah Gillespie") +
   expand_limits(y = 0) +
   expand_limits(y = 2) + #makes the graph start at 0
   scale_y_continuous(labels = dollar) +
@@ -89,5 +91,46 @@ p + geom_label_repel(aes(label = leader), #LEADER
                   box.padding = 1,
                   force_pull = -1)
 
+
+```
+
+```{r GDPgraph, message=FALSE, warning = FALSE}
+
+#data from world bank, in USD and BEA.gov, in current USD
+
+meltedGDP2<-(GDP2)
+molten.meltedGDP2 <- melt(meltedGDP2, id = c("Country"))
+print(molten.meltedGDP2)
+
+
+q <- ggplot(data=molten.meltedGDP2, aes(x=variable, y=value, group = Country, color=Country)) +
+    geom_line() +
+    geom_point() +
+  scale_y_continuous(labels = dollar) +
+    labs(title = "Gross Domestic Product", subtitle = "(in trillions of 2018 dollars)", y= " ", x = "Year", color = " ", caption = "Sources: World Bank, Bureau of Economic Analysis. Created by: Sarah Gillespie") +
+  theme_bw()
+
+q
+
+GDPgraphSMALL <- molten.meltedGDP2 %>%
+  filter(Country != "China") %>%
+  filter(Country != "US") %>%
+  filter(Country != "EU") %>%
+  filter(Country != "Ireland") %>%
+  filter(Country != "Japan")
+
+GDPgraphSMALL$variable <- as.numeric(as.character(GDPgraphSMALL$variable))
+
+GDPgraphSMALL <- GDPgraphSMALL %>%
+  filter(variable > 1999)
+
+r <- ggplot(data=GDPgraphSMALL, aes(x=variable, y=value, group = Country, color=Country)) +
+    geom_line() +
+    geom_point() +
+  scale_y_continuous(labels = dollar) +
+    labs(title = "Gross Domestic Product", subtitle = "(in trillions of 2018 dollars)", y= " ", x = "Year", color = " ", caption = "Sources: World Bank, Bureau of Economic Analysis. Created by: Sarah Gillespie") +
+  theme_bw()
+
+r
 
 ```
