@@ -15,7 +15,6 @@ Accessed on `r format(Sys.Date(), "%B %e, %Y")`
 
 <center>
 
-## Exchaneg Rates
 
 </center>
 
@@ -59,12 +58,14 @@ GDP2 <- read_csv("GDP2.csv")
 
 ```
 
+## Exchange Rates
+
 
 ```{r ExhangeRatesgraph, message=FALSE, warning = FALSE}
 p <- ggplot(data=currency, aes(x=observation_date, y=UK)) +
   geom_line(color = "#31a354") +
   geom_line(data = currency, aes(x = observation_date, y = Euro, color = Euro), color = "#3182bd") +
-  labs(title = "Exchange rates during Brexit", subtitle = "How many U.S. dollars £1 or €1 buys", y= " ", x = "Date", caption = "Source: St. Louis Federal Reserve. Created by: Sarah Gillespie") +
+  labs(title = "Exchange rates during Brexit", subtitle = "How many U.S. dollars £1 or €1 buys", y= " ", x = "Date", caption = "Source: St. Louis Federal Reserve. Data Analysis: Sarah Gillespie") +
   expand_limits(y = 0) +
   expand_limits(y = 2) + #makes the graph start at 0
   scale_y_continuous(labels = dollar) +
@@ -96,6 +97,8 @@ p + geom_label_repel(aes(label = leader), #LEADER
 
 ```
 
+## GDP for entities with a similar economy
+
 ```{r GDPgraph, message=FALSE, warning = FALSE}
 
 #data from world bank, in USD and BEA.gov, in current USD
@@ -109,7 +112,7 @@ q <- ggplot(data=molten.meltedGDP2, aes(x=variable, y=value, group = Country, co
     geom_line() +
     geom_point() +
   scale_y_continuous(labels = dollar) +
-    labs(title = "Gross Domestic Product", subtitle = "(in trillions of 2018 dollars)", y= " ", x = "Year", color = " ", caption = "Sources: World Bank, Bureau of Economic Analysis. Created by: Sarah Gillespie") +
+    labs(title = "Gross Domestic Product", subtitle = "(in trillions of 2018 dollars)", y= " ", x = "Year", color = " ", caption = "Sources: World Bank, Bureau of Economic Analysis. Data Analysis: Sarah Gillespie") +
   theme_bw()
 
 q
@@ -130,7 +133,7 @@ r <- ggplot(data=GDPgraphSMALL, aes(x=variable, y=value, group = Country, color=
     geom_line() +
     geom_point() +
   scale_y_continuous(labels = dollar) +
-    labs(title = "Gross Domestic Product", subtitle = "(in trillions of 2018 dollars)", y= " ", x = "Year", color = " ", caption = "Sources: World Bank, Bureau of Economic Analysis. Created by: Sarah Gillespie") +
+    labs(title = "Gross Domestic Product", subtitle = "(in trillions of 2018 dollars)", y= " ", x = "Year", color = " ", caption = "Sources: World Bank, Bureau of Economic Analysis. Data Analysis: Sarah Gillespie") +
   theme_economist()
 
 r
